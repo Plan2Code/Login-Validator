@@ -1,4 +1,4 @@
-# HTML Quiz
+# Login-Validator
 
 By: Curtis A. Warren
 
