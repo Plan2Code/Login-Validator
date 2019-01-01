@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Password Length</title>
+
+  <style>
+
+  .highlight-red {
+
+    color: red;
+
+  }
+
+  /* Creates a bottom line for the input fields in the form. */
+  .bottom-line {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom-color: black;
+    font-size: 28px;
+    /* Creates clear, see-through background for the input fields. */
+    background: white;
+  }
+
+  /* Outlines the form's look and feel */
+  .password-length-form {
+
+    font-size: 28px;
+    /* Creates clear, see-through background for the form. */
+    background: none;
+    margin: auto;
+    /* Hides overflow content. The form stays in the bouds of the div element. */
+    overflow: hidden;
+    color: white;
+    width: 96%;
+
+  }
+  /* Aligns form buttons to the right of their parent div element.*/
+  .form-buttons-div {
+
+    display: block;
+    text-align: center;
+
+  }
+
+  .centerDiv {
+
+    /* relative position ensures z-index moves this to the front. */
+    position: relative;
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom: 50px;
+    border-radius: 80px 80px 80px 80px;
+
+    display: block;
+
+    /* 100% of the width of the container is covered by the div .centerDiv. */
+    width: 100%;
+
+    height: auto;
+
+    /* Aligns the text inside of the div element. */
+    text-align: center;
+
+    /* Styles the border so the content--right, top, left. */
+    /*border-left: 2px slategray solid;
+    border-right: 2px slategray solid;
+    border-bottom: 2px slategray solid;*/
+
+    background: black;
+    opacity: 1;
+
+  }
+
+  /* The reporting section of the app, guides users.
+    Its look and feel is outlined here.*/
+  .reporting-element {
+
+    font-size: 25px;
+    color: white;
+
+  }
+
+
+  /* Outlines the background header's look and feel */
+  .backgroundHeader {
+
+    position: relative;
+    height: 100%;
+    margin: auto;
+    text-align: center;
+    padding: 20px;
+    /*Color of the header's text.*/
+    color: white;
+
+    width: 80%;
+    min-width: 300px;
+    border-radius: 80px;
+
+    background: #0077BE;
+    opacity: 1;
+    border: none;
+
+  }
+  /*Fills page to the bottom.*/
+  .backgroundBottom {
+
+    text-align: center;
+
+    height: 1in;
+    width: 100%;
+    background: linear-gradient(to bottom, white, slategrey);
+    border: none;
+
+  }
+
+  .cancel-button {
+
+    margin: 15px;
+    text-decoration: none;
+    border: none;
+    background-color: #E4000F;
+    font-size: 25px;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  .cancel-button:hover {
+
+    background-color: white;
+    font-size: 25px;
+    color: #E4000F;
+
+  }
+  .create-button:hover {
+
+    background-color: white;
+    font-size: 25px;
+    color: #0077BE;
+
+  }
+
+  .create-button {
+
+    margin: 15px;
+    text-decoration: none;
+    border: none;
+    background: #0077BE;
+    font-size: 25px;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  .signin-button {
+
+    margin: 15px;
+    text-decoration: none;
+    border: none;
+    background: #0077BE;
+    font-size: 25px;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-weight: bold;
+
+  }
+
+  .signin-button:hover {
+
+    background-color: white;
+    font-size: 25px;
+    color: #0077BE;
+
+  }
+
+  .titleDiv {
+
+    width: 96%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+  }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="backgroundHeader">
+
+    <div class="titleDiv">
+      <h1>Passwords and Usernames must be 8-10 characters in length.</h1>
+    </div>
+    <div class="centerDiv">
+
+      <form class="password-length-form" action="#">
+        <b>Enter Username</b><span class="highlight-red">*</span><br><input  placeholder="Enter username" class="bottom-line" id="username" type="text" name="username"><br>
+
+        <b>Enter Password</b><span class="highlight-red">*</span><br><input placeholder="Enter password" class="bottom-line" id="pass" type="password" name="pass">&nbsp<span id="checkmark-pass"></span><br>
+
+        <button class="create-button" id="show-password" type="button">Show Password</button><br>
+
+        <b>Please Re-enter Password</b><span class="highlight-red">*</span><br><input placeholder="Re-enter password" class="bottom-line" id="re-enter" type="password" name="re-enter">&nbsp<span id="checkmark-re-enter"></span><br>
+        <br>
+        <div class="form-buttons-div">
+          <button class="cancel-button" id="cancel-form-buttom" type="button">Cancel</button><button id="create-account-button" class="create-button" type="button">Create Account</button>
+        </div>
+      </form>
+
+      <p class="reporting-element" id="reporter"></p>
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+  const username = document.getElementById("username")
+  const pass = document.getElementById("pass")
+  const reEnter = document.getElementById("re-enter")
+
+
+  const reporter = document.getElementById("reporter")
+  const checkmarkPass = document.getElementById("checkmark-pass")
+  const checkmarkReEnter = document.getElementById("checkmark-re-enter")
+  const cancelFormButton = document.getElementById("cancel-form-buttom")
+  const showPassword = document.getElementById("show-password")
+
+  let maxLength = 10
+  let cancelPasswordLengthToken
+  let cancelReEnterPasswordToken
+
+  //  Resets fields on cancel.
+  cancelFormButton.onclick = function () { clearFields (false) }
+
+  showPassword.onclick = showPasswordFunction
+
+  //  Holds the sign-in.html page.
+  let signinPage
+  const createAccountButton = document.getElementById("create-account-button")
+
+
+  //  Clears fields at the start of the program; prevents ReEneter form being undefined during checks for equality.
+  window.onload = function () {
+
+    //  Clears fields at the start of the program...
+    //  In addition, it prevents Re enter from being undefined during checks for equality.
+    clearFields(true)
+
+  }
+
+  // Shows user their password.
+  function showPasswordFunction() {
+
+    if (pass.type == "password") {
+
+      pass.type = "text"
+      showPassword.textContent = "Hide Password"
+    } else {
+
+      pass.type = "password"
+      showPassword.textContent = "Show Password"
+
+    }
+
+
+  }
+  //  Checks password's length without request animations frame method.
+  //  Event listener.
+  pass.oninput = exceedsLengthCheck
+  pass.oninput = comparePasswords
+
+  //  Checks if the first password exceeds the maximum length of 10.
+  function exceedsLengthCheck() {
+
+    // Password section.
+    if ((pass.value.length >= 8 && pass.value.length <= 10)) {
+
+      reporter.textContent = "Great!  You have " + (maxLength - pass.value.length) + " left to type."
+      reporter.style.color = "#0077BE"
+    } else if (pass.value.length > 10) {
+
+      reporter.textContent = "Too large.  You have " + ((maxLength - pass.value.length)) + " left to type."
+      reporter.style.color = "red"
+
+
+    } else if (pass.value.length <= 8) {
+
+      reporter.textContent = "Too small.  You have " + ((maxLength - pass.value.length)) + " left to type."
+      reporter.style.color = "white"
+
+    }
+    //  Checks their equality during reentry.
+    if (reEnter.value !== "" && reEnter.value !== undefined && reEnter.value !== pass.value) {
+
+      checkmarkReEnter.textContent = "𐄂"
+      checkmarkReEnter.style.color = "red"
+      reporter.textContent = ""
+
+      reEnter.style.backgroundColor = "white"
+      reEnter.style.borderColor = "black"
+
+
+    } else if (reEnter.value !== "" && reEnter.value !== undefined && reEnter.value === pass.value) {
+
+      if (pass.value.length >= 8 && pass.value.length <= 10) {
+
+        reEnter.style.borderColor = "#0077BE"
+        reEnter.style.backgroundColor = "#0077BE"
+
+        pass.style.borderColor = "#0077BE"
+        pass.style.backgroundColor = "#0077BE"
+
+        //  Check marks show that the form was completed successfully.
+        checkmarkPass.textContent = "✓"
+        checkmarkPass.style.color = "green"
+
+        checkmarkReEnter.textContent = "✓"
+        checkmarkReEnter.style.color = "green"
+
+      }
+
+    }
+
+  }
+
+  //  Checks username's length without request animations frame method.
+  //  Event listener.
+  username.oninput = checkUsernameLength
+
+  function checkUsernameLength() {
+
+      // Username section.
+      if (username.value.length >= 8 && username.value.length <= 10) {
+
+        reporter.textContent = "Great!  You have " + (maxLength - username.value.length) + " left to type."
+        reporter.style.color = "#0077BE"
+      } else if (username.value.length > 10) {
+
+        reporter.textContent = "Too large.  You have " + ((maxLength - username.value.length)) + " left to type."
+        reporter.style.color = "red"
+
+
+      } else if (username.value.length <= 8) {
+
+        reporter.textContent = "Too small.  You have " + ((maxLength - username.value.length)) + " left to type."
+        reporter.style.color = "white"
+
+      }
+
+  }
+
+  //  Compares passwords.
+  reEnter.oninput = comparePasswords
+
+  //  Compares the two passwords.
+  function comparePasswords() {
+
+    if (reEnter.value !== "" && reEnter.value !== undefined && reEnter.value !== pass.value) {
+
+
+      checkmarkReEnter.textContent = "𐄂"
+      checkmarkReEnter.style.color = "red"
+      reporter.textContent = ""
+
+      reEnter.style.backgroundColor = "white"
+      reEnter.style.borderColor = "black"
+
+
+    } else if (reEnter.value === pass.value && pass.value.length >= 8 && pass.value.length <= 10) {
+
+      reEnter.style.borderColor = "#0077BE"
+      reEnter.style.backgroundColor = "#0077BE"
+
+      pass.style.borderColor = "#0077BE"
+      pass.style.backgroundColor = "#0077BE"
+
+      checkmarkPass.textContent = "✓"
+      checkmarkPass.style.color = "green"
+
+      checkmarkReEnter.textContent = "✓"
+      checkmarkReEnter.style.color = "green"
+
+      //  Confirms that the two passwords are equal.
+      reporter.style.color = "#0077BE"
+      reporter.textContent = "Great work!!"
+
+    }
+
+  }
+
+  //  Clears textfields's input.
+  function clearFields(initial) {
+
+    pass.value = ""
+    reEnter.value = ""
+    username.value = ""
+    reporter.style.color = "#0077BE"
+    if (!initial) {
+      reporter.textContent = "The form has been cancelled."
+    }
+  }
+  //  Checks if fields are empty or undefined
+  function resetFields() {
+
+    if (reEnter.value === "" || reEnter.value === undefined) {
+
+      reEnter.style.backgroundColor = "white"
+      reEnter.style.borderColor = "black"
+      checkmarkReEnter.textContent = ""
+
+    }
+
+    if (pass.value === "" || pass.value === undefined) {
+
+      pass.style.backgroundColor = "white"
+      pass.style.borderColor = "black"
+      checkmarkPass.textContent = ""
+
+    }
+
+  }
+
+  </script>
+
+</body>
+
+</html>
